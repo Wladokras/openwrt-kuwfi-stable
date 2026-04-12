@@ -1514,3 +1514,10 @@ define Device/teltonika_rut241
   IMAGE/sysupgrade.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | check-size | append-metadata
 endef
 TARGET_DEVICES += teltonika_rut241
+
+define Device/kuwfi_a8_v1.5
+  DEVICE_VENDOR := KuWFi
+  DEVICE_MODEL := A8 V1.5
+  IMAGE_SIZE := 7808k
+endef
+TARGET_DEVICES += kuwfi_a8_v1.5
