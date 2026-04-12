@@ -23,29 +23,34 @@ jobs:
     
     - name: Create .config file
       run: |
-        echo 'CONFIG_TARGET_ramips=y' >> .config
-        echo 'CONFIG_TARGET_ramips_mt76x8=y' >> .config
-        echo 'CONFIG_TARGET_ramips_mt76x8_DEVICE_kuwfi_a8_v1.5=y' >> .config
-        echo 'CONFIG_PACKAGE_luci=y' >> .config
-        echo 'CONFIG_PACKAGE_luci-base=y' >> .config
-        echo 'CONFIG_PACKAGE_luci-mod-admin-full=y' >> .config
-        echo 'CONFIG_PACKAGE_luci-theme-bootstrap=y' >> .config
-        echo 'CONFIG_PACKAGE_uhttpd=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-mt7603=y' >> .config
-        echo 'CONFIG_PACKAGE_iw=y' >> .config
-        echo 'CONFIG_PACKAGE_wpad-basic-mbedtls=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb2=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-net=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-serial=y' >> .config
-        echo 'CONFIG_PACKAGE_kmod-usb-serial-option=y' >> .config
-        echo 'CONFIG_PACKAGE_uqmi=y' >> .config
-        echo 'CONFIG_PACKAGE_luci-proto-qmi=y' >> .config
-        echo 'CONFIG_TARGET_ROOTFS_SQUASHFS=y' >> .config
-        echo 'CONFIG_TARGET_IMAGES_GZIP=y' >> .config
-        echo 'CONFIG_ALL_KMODS=n' >> .config
-        echo 'CONFIG_ALL=n' >> .config
+        cat > .config << 'EOF'
+        CONFIG_TARGET_ramips=y
+        CONFIG_TARGET_ramips_mt76x8=y
+        CONFIG_TARGET_ramips_mt76x8_DEVICE_kuwfi_a8_v1.5=y
+        CONFIG_PACKAGE_luci=y
+        CONFIG_PACKAGE_luci-base=y
+        CONFIG_PACKAGE_luci-mod-admin-full=y
+        CONFIG_PACKAGE_luci-theme-bootstrap=y
+        CONFIG_PACKAGE_uhttpd=y
+        CONFIG_PACKAGE_kmod-mt7603=y
+        CONFIG_PACKAGE_iw=y
+        CONFIG_PACKAGE_wpad-basic-mbedtls=y
+        CONFIG_PACKAGE_kmod-usb2=y
+        CONFIG_PACKAGE_kmod-usb-net=y
+        CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y
+        CONFIG_PACKAGE_kmod-usb-serial=y
+        CONFIG_PACKAGE_kmod-usb-serial-option=y
+        CONFIG_PACKAGE_uqmi=y
+        CONFIG_PACKAGE_luci-proto-qmi=y
+        CONFIG_TARGET_ROOTFS_SQUASHFS=y
+        CONFIG_TARGET_IMAGES_GZIP=y
+        CONFIG_ALL_KMODS=n
+        CONFIG_ALL=n
+        EOF
         cat .config
+    
+    - name: Oldconfig (prepare build without terminal)
+      run: yes "" | make oldconfig
     
     - name: Download sources
       run: make download -j8
