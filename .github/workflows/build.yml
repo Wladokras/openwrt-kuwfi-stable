@@ -1,0 +1,38 @@
+name: Build OpenWrt for KuWFi MT7628
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: v23.05.5
+    
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential libncurses5-dev gawk git libssl-dev gettext unzip python3 rsync wget time file bc
+    
+    - name: Update feeds
+      run: |
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+    
+    - name: Configure
+      run: cp .config .config.default
+    
+    - name: Download sources
+      run: make download -j8
+    
+    - name: Build
+      run: make -j$(nproc)
+      timeout-minutes: 90
+    
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: openwrt-kuwfi
+        path: bin/targets/ramips/mt76x8/*.bin
