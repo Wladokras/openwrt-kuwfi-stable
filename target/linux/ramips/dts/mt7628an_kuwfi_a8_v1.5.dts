@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "mt7628an_kuwfi_a8_v1.5.dtsi"
+
+/ {
+	compatible = "kuwfi,a8-v1.5", "mediatek,mt7628an-soc";
+	model = "KuWFi A8 V1.5";
+
+	aliases {
+		label-mac-device = &ethernet;
+		led-boot = &led_status;
+		led-failsafe = &led_status;
+		led-running = &led_status;
+		led-upgrade = &led_status;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_status: led-0 {
+			color = <LED_COLOR_ID_BLUE>;
+			function = LED_FUNCTION_STATUS;
+			gpios = <&gpio 37 GPIO_ACTIVE_HIGH>;
+		};
+
+		led-1 {
+			color = <LED_COLOR_ID_BLUE>;
+			function = LED_FUNCTION_WAN;
+			gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+		};
+
+		led-2 {
+			color = <LED_COLOR_ID_BLUE>;
+			function = LED_FUNCTION_WLAN;
+			gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "phy0tpt";
+		};
+	};
+};
+
+&esw {
+	mediatek,portmap = <0x2f>;
+	mediatek,portdisable = <0x20>;
+};
+
+&state_default {
+	gpio {
+		groups = "i2s", "refclk", "wdt", "wled_an";
+		function = "gpio";
+	};
+};
