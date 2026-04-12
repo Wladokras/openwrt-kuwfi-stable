@@ -49,8 +49,8 @@ jobs:
         EOF
         cat .config
     
-    - name: Defconfig (prepare build)
-      run: make defconfig
+    - name: Oldconfig (prepare build without terminal)
+      run: yes "" | make oldconfig
     
     - name: Download sources
       run: make download -j8
