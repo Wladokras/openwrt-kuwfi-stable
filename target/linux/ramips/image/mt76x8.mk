@@ -1059,3 +1059,11 @@ define Device/zyxel_keenetic-extra-ii
 	check-size | zyimage -d 6162 -v "ZyXEL Keenetic Extra II"
 endef
 TARGET_DEVICES += zyxel_keenetic-extra-ii
+
+define Device/kuwfi_a8_v1.5
+  DEVICE_VENDOR := KuWFi
+  DEVICE_MODEL := A8 V1.5
+  IMAGE_SIZE := 7808k
+endef
+TARGET_DEVICES += kuwfi_a8_v1.5
+
