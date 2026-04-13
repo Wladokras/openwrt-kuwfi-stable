@@ -34,7 +34,8 @@
 	flash@0 {
 		compatible = "jedec,spi-nor";
 		reg = <0>;
-		spi-max-frequency = <40000000>;
+		spi-max-frequency = <50000000>;
+		m25p,fast-read;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -48,30 +49,80 @@
 			};
 
 			partition@30000 {
-				label = "u-boot-env";
+				label = "hw_panic";
 				reg = <0x30000 0x10000>;
+				read-only;
 			};
 
 			partition@40000 {
 				label = "factory";
 				reg = <0x40000 0x10000>;
 				read-only;
+
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					eeprom_factory_0: eeprom@0 {
+						reg = <0x0 0x400>;
+					};
+
+					eeprom_factory_8000: eeprom@8000 {
+						reg = <0x8000 0x200>;
+					};
+				};
 			};
 
 			partition@50000 {
+				compatible = "denx,uimage";
 				label = "firmware";
-				reg = <0x50000 0x7b0000>;
+				reg = <0x50000 0xf70000>;
+			};
+
+			partition@fc0000 {
+				label = "oem";
+				reg = <0xfc0000 0x20000>;
+				read-only;
+			};
+
+			partition@fe0000 {
+				label = "bdinfo";
+				reg = <0xfe0000 0x10000>;
+				read-only;
+
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					macaddr_bdinfo_18a: macaddr@18a {
+						compatible = "mac-base";
+						reg = <0x18a 0x11>;
+						#nvmem-cell-cells = <1>;
+					};
+				};
+			};
+
+			partition@ff0000 {
+				label = "backup";
+				reg = <0xff0000 0x10000>;
+				read-only;
 			};
 		};
 	};
 };
 
 &ethernet {
-	status = "okay";
+	nvmem-cells = <&macaddr_bdinfo_18a 0>;
+	nvmem-cell-names = "mac-address";
 };
 
 &wmac {
 	status = "okay";
+
+	nvmem-cells = <&eeprom_factory_0>, <&macaddr_bdinfo_18a 0>;
+	nvmem-cell-names = "eeprom", "mac-address";
 };
 
 &ehci {
@@ -79,5 +130,9 @@
 };
 
 &ohci {
+	status = "okay";
+};
+
+&usbphy {
 	status = "okay";
 };
